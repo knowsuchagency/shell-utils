@@ -1,22 +1,27 @@
 [[source]]
+
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 
+
 [packages]
+
 attrs = "*"
 click = "*"
 
+
 [dev-packages]
+
 "autopep8" = "*"
 bumpversion = "*"
 coverage = "*"
 cryptography = "*"
-flake8 = "*"
+"flake8" = "*"
 mypy = "*"
 pytest = "*"
 pytest-runner = "*"
-PyYAML = "*"
-Sphinx = "*"
+pyyaml = "*"
+sphinx = "*"
 tox = "*"
 sphinx-autodoc-typehints = "*"
 sphinxcontrib-asyncio = "*"
