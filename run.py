@@ -245,9 +245,9 @@ def release():
     context = click.get_current_context()
 
     context.invoke(test_readme)
+    context.invoke(publish_docs)
     context.invoke(tox)
     context.invoke(clean, all=True)
-    context.invoke(publish_docs)
 
     shell('python setup.py sdist bdist_wheel')
     shell('twine upload dist/*')
