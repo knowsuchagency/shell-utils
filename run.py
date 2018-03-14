@@ -321,7 +321,7 @@ def test(capture, pdb, mypy):
     shell('py.test tests/' + ' ' + pytest_flags)
 
     if mypy:
-        shell('mypy shell_utils tests/')
+        shell('mypy shell_utils tests/ --ignore-missing-imports')
 
 
 @main.command()
