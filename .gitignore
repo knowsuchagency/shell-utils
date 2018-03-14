@@ -66,3 +66,6 @@ public/
 
 # jetbrains
 .idea/
+
+# mypy
+.mypy_cache/
