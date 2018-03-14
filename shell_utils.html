@@ -143,6 +143,69 @@ piped to FD 1 and 2 by default</p>
 <div class="section" id="module-shell_utils">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-shell_utils" title="Permalink to this headline">¶</a></h2>
 <p>Top-level package for shell-utils.</p>
+<dl class="function">
+<dt id="shell_utils.shell">
+<code class="descclassname">shell_utils.</code><code class="descname">shell</code><span class="sig-paren">(</span><em>command: str</em>, <em>check=True</em>, <em>capture=False</em><span class="sig-paren">)</span> &#x2192; subprocess.CompletedProcess<a class="reference internal" href="_modules/shell_utils/shell_utils.html#shell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shell_utils.shell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the command in a shell.</p>
+<p>!!! Make sure you trust the input to this command !!!</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>command</strong> – the command to be run</li>
+<li><strong>check</strong> – raise exception if return code not zero</li>
+<li><strong>capture</strong> – <p>if set to True, captures stdout and stderr,
+making them available as stdout and stderr
+attributes on the returned CompletedProcess.</p>
+<p>This also means the command’s stdout and stderr won’t be
+piped to FD 1 and 2 by default</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: Completed Process</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="shell_utils.env">
+<code class="descclassname">shell_utils.</code><code class="descname">env</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterator[os._Environ]<a class="reference internal" href="_modules/shell_utils/shell_utils.html#env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shell_utils.env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set environment variables and yield new environment dict.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="shell_utils.path">
+<code class="descclassname">shell_utils.</code><code class="descname">path</code><span class="sig-paren">(</span><em>*paths</em>, <em>prepend=False</em>, <em>expand_user=True</em><span class="sig-paren">)</span> &#x2192; Iterator[List[str]]<a class="reference internal" href="_modules/shell_utils/shell_utils.html#path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shell_utils.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the paths to $PATH and yield the new $PATH as a list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prepend</strong> – prepend paths to $PATH else append</li>
+<li><strong>expand_user</strong> – expands home if ~ is used in path strings</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="shell_utils.cd">
+<code class="descclassname">shell_utils.</code><code class="descname">cd</code><span class="sig-paren">(</span><em>path_: Union[os.PathLike, str]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shell_utils/shell_utils.html#cd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shell_utils.cd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the current working directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="shell_utils.quiet">
+<code class="descclassname">shell_utils.</code><code class="descname">quiet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shell_utils/shell_utils.html#quiet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#shell_utils.quiet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress stdout and stderr.</p>
+<p><a class="reference external" href="https://stackoverflow.com/questions/11130156/suppress-stdout-stderr-print-from-python-functions">https://stackoverflow.com/questions/11130156/suppress-stdout-stderr-print-from-python-functions</a></p>
+</dd></dl>
+
 </div>
 </div>
 
