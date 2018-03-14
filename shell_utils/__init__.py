@@ -9,9 +9,9 @@ __version__ = '0.1.0'
 from shell_utils.shell_utils import shell, env, path, cd, quiet
 
 __all__ = [
-    shell,
-    env,
-    path,
-    cd,
-    quiet
+    'shell',
+    'env',
+    'path',
+    'cd',
+    'quiet'
 ]
