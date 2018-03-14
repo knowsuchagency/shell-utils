@@ -1,0 +1,3 @@
+{
+  "tests/test_shell_utils.py::test_quiet": true
+}
