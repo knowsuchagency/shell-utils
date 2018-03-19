@@ -4,7 +4,7 @@
 
 __author__ = """Stephan Fitzpatrick"""
 __email__ = 'knowsuchagency@gmail.com'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 from shell_utils.shell_utils import shell, env, path, cd, quiet
 
