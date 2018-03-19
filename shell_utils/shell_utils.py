@@ -30,6 +30,7 @@ def shell(command: str, check=True, capture=False) -> sp.CompletedProcess:
 
     """
     user = os.getlogin()
+    print()
     print(f'{user}: {command}')
     process = sp.run(command,
                      check=check,
