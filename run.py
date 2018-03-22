@@ -131,10 +131,9 @@ def release():
 
 def clean_build():
     """Remove build artifacts."""
-    click.confirm('This will uninstall the shell_utils cli. '
-                  'You may need to run `pip install -e .` to reinstall it. '
-                  'Continue?',
-                  abort=True)
+    click.secho('This will uninstall the shell_utils cli. '
+                'You may need to run `pip install -e .` to reinstall it.',
+                fg='yellow')
 
     shell('rm -fr build/')
     shell('rm -fr dist/')
