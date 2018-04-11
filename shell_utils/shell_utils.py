@@ -32,12 +32,15 @@ def shell(command: str, check=True, capture=False) -> sp.CompletedProcess:
     user = os.getlogin()
     print()
     print(f'{user}: {command}')
-    process = sp.run(command,
-                     check=check,
-                     shell=True,
-                     stdout=sp.PIPE if capture else None,
-                     stderr=sp.PIPE if capture else None
-                     )
+    try:
+        process = sp.run(command,
+                         check=check,
+                         shell=True,
+                         stdout=sp.PIPE if capture else None,
+                         stderr=sp.PIPE if capture else None
+                         )
+    except sp.CalledProcessError as err:
+        raise SystemExit(err)
     print()
     return process
 
