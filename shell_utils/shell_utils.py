@@ -13,7 +13,7 @@ Pathy = T.Union[os.PathLike, str]
 def shell(command: str,
           check=True,
           capture=False,
-          show_command=True) -> sp.CompletedProcess:
+          print_command=True) -> sp.CompletedProcess:
     """
     Run the command in a shell.
 
@@ -28,14 +28,14 @@ def shell(command: str,
 
                  This also means the command's stdout and stderr won't be
                  piped to FD 1 and 2 by default
-        show_command: show command being run prefixed by user
+        print_command: show command being run prefixed by user
 
     Returns: Completed Process
 
     """
     user = os.getlogin()
     print()
-    if show_command:
+    if print_command:
         print(f'{user}: {command}')
     try:
         process = sp.run(command,
