@@ -25,9 +25,7 @@ def test_shell_capture():
 
 def test_shell_raises():
     """Test shell raises."""
-    import subprocess as sp
-
-    with pytest.raises(sp.CalledProcessError):
+    with pytest.raises(SystemExit):
         shell('exit 1')
 
     assert shell('exit 1', check=False).returncode == 1
