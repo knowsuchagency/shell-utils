@@ -86,7 +86,7 @@ def env(**kwargs) -> T.Iterator[os._Environ]:
 
 @contextmanager
 def path(*paths: Pathy, prepend=False, expand_user=True) -> T.Iterator[
-    T.List[str]]:
+        T.List[str]]:
     """
     Add the paths to $PATH and yield the new $PATH as a list.
 
@@ -108,7 +108,7 @@ def path(*paths: Pathy, prepend=False, expand_user=True) -> T.Iterator[
     original_path = os.environ['PATH'].split(':')
 
     paths_str_list = paths_str_list + \
-                     original_path if prepend else original_path + paths_str_list
+        original_path if prepend else original_path + paths_str_list
 
     with env(PATH=':'.join(paths_str_list)):
         yield paths_str_list
