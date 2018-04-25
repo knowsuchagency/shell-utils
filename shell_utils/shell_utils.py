@@ -9,6 +9,9 @@ import typing as T
 from functools import singledispatch, wraps
 from contextlib import contextmanager
 from getpass import getuser
+from socket import gethostname
+
+import click
 
 Pathy = T.Union[os.PathLike, str]
 
@@ -36,12 +39,13 @@ def shell(command: str,
     Returns: Completed Process
 
     """
-    user = getuser()
+    user = click.style(getuser(), fg='green')
+    hostname = click.style(gethostname(), fg='magenta')
 
     print()
 
     if print_command:
-        print(f'{user}: {command}')
+        print(f'{user}@{hostname}: {command}')
 
     try:
         process = sp.run(command,
