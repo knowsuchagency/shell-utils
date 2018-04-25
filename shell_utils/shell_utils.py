@@ -3,9 +3,12 @@
 """Main module."""
 import copy
 import os
+import types
 import subprocess as sp
 import typing as T
+from functools import singledispatch, wraps
 from contextlib import contextmanager
+from getpass import getuser
 
 Pathy = T.Union[os.PathLike, str]
 
@@ -33,10 +36,13 @@ def shell(command: str,
     Returns: Completed Process
 
     """
-    user = os.getlogin()
+    user = getuser()
+
     print()
+
     if print_command:
         print(f'{user}: {command}')
+
     try:
         process = sp.run(command,
                          check=check,
@@ -46,7 +52,9 @@ def shell(command: str,
                          )
     except sp.CalledProcessError as err:
         raise SystemExit(err)
+
     print()
+
     return process
 
 
@@ -73,7 +81,8 @@ def env(**kwargs) -> T.Iterator[os._Environ]:
 
 
 @contextmanager
-def path(*paths: Pathy, prepend=False, expand_user=True) -> T.Iterator[T.List[str]]:
+def path(*paths: Pathy, prepend=False, expand_user=True) -> T.Iterator[
+    T.List[str]]:
     """
     Add the paths to $PATH and yield the new $PATH as a list.
 
@@ -95,7 +104,7 @@ def path(*paths: Pathy, prepend=False, expand_user=True) -> T.Iterator[T.List[st
     original_path = os.environ['PATH'].split(':')
 
     paths_str_list = paths_str_list + \
-        original_path if prepend else original_path + paths_str_list
+                     original_path if prepend else original_path + paths_str_list
 
     with env(PATH=':'.join(paths_str_list)):
         yield paths_str_list
@@ -133,3 +142,36 @@ def quiet():
     # close all file descriptors.
     for fd in null_file_descriptors + stdout_and_stderr:
         os.close(fd)
+
+
+@singledispatch
+def notify(message: str, title='run.py'):
+    """Mac os pop-up notification."""
+    shell(f'terminal-notifier -title {title} -message {message} '
+          f'-sound default', capture=True, print_command=False)
+
+
+@notify.register(types.FunctionType)
+def _(func):
+    """
+    Send notification that task has finished.
+
+    Especially useful for long-running tasks
+    """
+
+    @wraps(func)
+    def inner(*args, **kwargs):
+        result = None
+        message = 'Succeeded!'
+
+        try:
+            result = func(*args, **kwargs)
+        except Exception:
+            message = 'Failed'
+            raise
+        else:
+            return result
+        finally:
+            notify(message, title=getattr(func, '__name__'))
+
+    return inner
