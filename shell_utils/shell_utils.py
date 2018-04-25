@@ -19,7 +19,7 @@ Pathy = T.Union[os.PathLike, str]
 def shell(command: str,
           check=True,
           capture=False,
-          print_command=True) -> sp.CompletedProcess:
+          show_command=True) -> sp.CompletedProcess:
     """
     Run the command in a shell.
 
@@ -34,7 +34,7 @@ def shell(command: str,
 
                  This also means the command's stdout and stderr won't be
                  piped to FD 1 and 2 by default
-        print_command: show command being run prefixed by user
+        show_command: show command being run prefixed by user
 
     Returns: Completed Process
 
@@ -44,7 +44,7 @@ def shell(command: str,
 
     print()
 
-    if print_command:
+    if show_command:
         print(f'{user}@{hostname}: {command}')
 
     try:
@@ -152,7 +152,7 @@ def quiet():
 def notify(message: str, title='run.py'):
     """Mac os pop-up notification."""
     shell(f'terminal-notifier -title {title} -message {message} '
-          f'-sound default', capture=True, print_command=False)
+          f'-sound default', capture=True, show_command=False)
 
 
 @notify.register(types.FunctionType)
