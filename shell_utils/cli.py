@@ -10,13 +10,34 @@ from pathlib import Path
 import re
 import os
 
+from shell_utils import shell
+
 import click
+
 
 
 @click.group()
 def cli():
     """A cli for shell-utils."""
     pass
+
+@cli.command()
+def generate_runner():
+    """Generate a run.py script in the current directory."""
+    from shell_utils import runner
+
+    runner_path = Path('run.py')
+
+    if runner_path.exists():
+        raise EnvironmentError('run.py already exists in current directory')
+
+    click.secho('writing content to run.py', fg='yellow')
+
+    runner_path.write_text(Path(runner.__file__).read_text())
+
+    shell('chmod +x run.py')
+
+
 
 
 def add_dev_command(root_cmd):

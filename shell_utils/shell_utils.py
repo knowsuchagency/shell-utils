@@ -4,6 +4,7 @@
 import copy
 import os
 import types
+import textwrap
 import subprocess as sp
 import typing as T
 from functools import singledispatch, wraps
@@ -19,7 +20,9 @@ Pathy = T.Union[os.PathLike, str]
 def shell(command: str,
           check=True,
           capture=False,
-          show_command=True) -> sp.CompletedProcess:
+          show_command=True,
+          dedent=True,
+          strip=True) -> sp.CompletedProcess:
     """
     Run the command in a shell.
 
@@ -35,17 +38,23 @@ def shell(command: str,
                  This also means the command's stdout and stderr won't be
                  piped to FD 1 and 2 by default
         show_command: show command being run prefixed by user
+        dedent: de-dent command string; useful if it's a bash script written within a function in your module
+        strip: strip the command string of newlines and whitespace from the beginning and end
 
     Returns: Completed Process
 
     """
     user = click.style(getuser(), fg='green')
-    hostname = click.style(gethostname(), fg='magenta')
+    hostname = click.style(gethostname(), fg='blue')
+
+    command = command.strip() if strip else command
+    command = textwrap.dedent(command) if dedent else command
 
     print()
 
     if show_command:
-        print(f'{user}@{hostname}: {command}')
+        print(f'{user}@{hostname} executing...', end=os.linesep * 2)
+        print(command, end=os.linesep * 2)
 
     try:
         process = sp.run(command,
@@ -86,7 +95,7 @@ def env(**kwargs) -> T.Iterator[os._Environ]:
 
 @contextmanager
 def path(*paths: Pathy, prepend=False, expand_user=True) -> T.Iterator[
-        T.List[str]]:
+    T.List[str]]:
     """
     Add the paths to $PATH and yield the new $PATH as a list.
 
@@ -108,7 +117,7 @@ def path(*paths: Pathy, prepend=False, expand_user=True) -> T.Iterator[
     original_path = os.environ['PATH'].split(':')
 
     paths_str_list = paths_str_list + \
-        original_path if prepend else original_path + paths_str_list
+                     original_path if prepend else original_path + paths_str_list
 
     with env(PATH=':'.join(paths_str_list)):
         yield paths_str_list
@@ -146,36 +155,3 @@ def quiet():
     # close all file descriptors.
     for fd in null_file_descriptors + stdout_and_stderr:
         os.close(fd)
-
-
-@singledispatch
-def notify(message: str, title='run.py'):
-    """Mac os pop-up notification."""
-    shell(f'terminal-notifier -title {title} -message {message} '
-          f'-sound default', capture=True, show_command=False)
-
-
-@notify.register(types.FunctionType)
-def _(func):
-    """
-    Send notification that task has finished.
-
-    Especially useful for long-running tasks
-    """
-
-    @wraps(func)
-    def inner(*args, **kwargs):
-        result = None
-        message = 'Succeeded!'
-
-        try:
-            result = func(*args, **kwargs)
-        except Exception:
-            message = 'Failed'
-            raise
-        else:
-            return result
-        finally:
-            notify(message, title=getattr(func, '__name__'))
-
-    return inner
