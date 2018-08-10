@@ -225,10 +225,14 @@ def docs(no_browser):
     """
     Generate Sphinx HTML documentation, including API docs.
     """
-    shell('rm -f docs/shell_utils.rst')
-    shell('rm -f docs/modules.rst')
-    shell('rm -f docs/shell_utils*')
-    shell('sphinx-apidoc -o docs/ shell_utils')
+    shell(
+        """
+        rm -f docs/shell_utils.rst
+        rm -f docs/modules.rst
+        rm -rf docs/shell_utils*
+        sphinx-apidoc -o docs/ shell_utils
+        """
+    )
 
     with cd('docs'):
         shell('make clean')

@@ -3,11 +3,9 @@
 """Main module."""
 import copy
 import os
-import types
-import textwrap
 import subprocess as sp
+import textwrap
 import typing as T
-from functools import singledispatch, wraps
 from contextlib import contextmanager
 from getpass import getuser
 from socket import gethostname
