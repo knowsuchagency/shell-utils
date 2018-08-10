@@ -6,6 +6,7 @@ import os
 import subprocess as sp
 import textwrap
 import typing as T
+import logging
 from contextlib import contextmanager
 from getpass import getuser
 from socket import gethostname
@@ -61,8 +62,9 @@ def shell(command: str,
                          stdout=sp.PIPE if capture else None,
                          stderr=sp.PIPE if capture else None
                          )
-    except sp.CalledProcessError as err:
-        raise SystemExit(err)
+    except sp.CalledProcessError:
+        logging.error(f'command [{command}] failed with status code {process.returncode}')
+        raise
 
     print()
 
