@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Task runner for the shell-utils project."""
 from tempfile import NamedTemporaryFile
 from textwrap import dedent
@@ -263,7 +263,7 @@ def publish_docs():
             git push gh-pages
             git checkout master
             """).strip())
-        print('created github pages branch')
+        click.secho('created github pages branch', fg='green')
 
     # deleting old publication
     shell('rm -rf public')

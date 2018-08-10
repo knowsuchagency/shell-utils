@@ -155,3 +155,11 @@ def quiet():
     # close all file descriptors.
     for fd in null_file_descriptors + stdout_and_stderr:
         os.close(fd)
+
+__all__ = [
+    'shell',
+    'cd',
+    'env',
+    'path',
+    'quiet'
+]
