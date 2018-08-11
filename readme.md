@@ -143,16 +143,9 @@ shell('echo hello, world')
 
 shell(
     """
-    echo g
-    echo f
-    """
-)
-
-shell(
-    """
     echo foo
     echo bar
-    """, strip=False
+    """
 )
 
 process = shell('echo aloha', capture=True)
@@ -168,15 +161,6 @@ stephanfitzpatrick@stephanfitzpatrick executing...
 echo hello, world
 
 hello, world
-
-
-stephanfitzpatrick@stephanfitzpatrick executing...
-
-echo g
-    echo f
-
-g
-f
 
 
 stephanfitzpatrick@stephanfitzpatrick executing...

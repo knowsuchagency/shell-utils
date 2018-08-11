@@ -20,7 +20,7 @@ def shell(command: str,
           capture=False,
           show_command=True,
           dedent=True,
-          strip=True) -> sp.CompletedProcess:
+          strip=False) -> sp.CompletedProcess:
     """
     Run the command in a shell.
 
