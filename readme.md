@@ -137,49 +137,44 @@ Temporarily changes the current working directory while within the context scope
 Within a python shell...
 
 ```python
-from shell_utils import shell
+from shell_utils import shell, cd
 
-shell('echo hello, world')
-
-shell(
-    """
-    echo foo
-    echo bar
-    """
-)
-
-process = shell('echo aloha', capture=True)
-
-print(f"The last process' stdout was {process.stdout.decode().strip()} and its return code was {process.returncode}")
+with cd('~'):
+    shell('echo $PWD')
+    shell('mkdir -p foo')
+    with cd('foo'):
+        shell('echo $PWD')
+    shell('echo $PWD')
 ```
 
 **outputs**
 
 ```bash
-stephanfitzpatrick@stephanfitzpatrick executing...
+user@hostname executing...
 
-echo hello, world
+echo $PWD
 
-hello, world
-
-
-stephanfitzpatrick@stephanfitzpatrick executing...
+/Users/user
 
 
-echo foo
-echo bar
+user@hostname executing...
+
+mkdir -p foo
 
 
-foo
-bar
+
+user@hostname executing...
+
+echo $PWD
+
+/Users/user/foo
 
 
-stephanfitzpatrick@stephanfitzpatrick executing...
+user@hostname executing...
 
-echo aloha
+echo $PWD
 
-
-The last process' stdout was aloha and its return code was 0
+/Users/user
 ```
 
 ## env

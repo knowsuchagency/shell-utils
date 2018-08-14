@@ -73,7 +73,7 @@ def shell(command: str,
 def cd(path_: Pathy):
     """Change the current working directory."""
     cwd = os.getcwd()
-    os.chdir(path_)
+    os.chdir(os.path.expanduser(path_))
     yield
     os.chdir(cwd)
 
