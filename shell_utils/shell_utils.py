@@ -18,7 +18,7 @@ Pathy = T.Union[os.PathLike, str]
 def shell(command: str,
           check=True,
           capture=False,
-          show_command=True,
+          silent=False,
           dedent=True,
           strip=False) -> sp.CompletedProcess:
     """
@@ -35,7 +35,7 @@ def shell(command: str,
 
                  This also means the command's stdout and stderr won't be
                  piped to FD 1 and 2 by default
-        show_command: show command being run prefixed by user
+        silent: disable the printing of the command that's being run prior to execution
         dedent: de-dent command string; useful if it's a bash script written within a function in your module
         strip: strip the command string of newlines and whitespace from the beginning and end
 
@@ -50,7 +50,7 @@ def shell(command: str,
 
     print()
 
-    if show_command:
+    if not silent:
         print(f'{user}@{hostname} executing...', end=os.linesep * 2)
         print(command, end=os.linesep * 2)
 
