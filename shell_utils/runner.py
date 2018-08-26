@@ -23,10 +23,6 @@ def main():
                     fg='yellow')
         os.chdir(root)
 
-    if root != cwd:
-        click.secho(f'Navigating from {cwd} to {root}', fg='yellow')
-        os.chdir(root)
-
 
 if __name__ == '__main__':
     main()
