@@ -154,10 +154,16 @@ def quiet():
     for fd in null_file_descriptors + stdout_and_stderr:
         os.close(fd)
 
+
+# alias bash
+
+bash = shell
+
 __all__ = [
     'shell',
+    'bash',
     'cd',
     'env',
     'path',
-    'quiet'
+    'quiet',
 ]
