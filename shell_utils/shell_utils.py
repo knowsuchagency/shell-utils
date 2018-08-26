@@ -20,7 +20,9 @@ def shell(command: str,
           capture=False,
           silent=False,
           dedent=True,
-          strip=False) -> sp.CompletedProcess:
+          strip=False,
+          **kwargs
+          ) -> sp.CompletedProcess:
     """
     Run the command in a shell.
 
@@ -38,6 +40,7 @@ def shell(command: str,
         silent: disable the printing of the command that's being run prior to execution
         dedent: de-dent command string; useful if it's a bash script written within a function in your module
         strip: strip the command string of newlines and whitespace from the beginning and end
+        kwargs: passed to subprocess.run as-is
 
     Returns: Completed Process
 
@@ -52,14 +55,15 @@ def shell(command: str,
 
     if not silent:
         print(f'{user}@{hostname} executing...', end=os.linesep * 2)
-        print(command, end=os.linesep * 2)
+        print(command, end=os.linesep + '--' + os.linesep)
 
     try:
         process = sp.run(command,
                          check=check,
                          shell=True,
                          stdout=sp.PIPE if capture else None,
-                         stderr=sp.PIPE if capture else None
+                         stderr=sp.PIPE if capture else None,
+                         **kwargs
                          )
     except sp.CalledProcessError:
         raise
