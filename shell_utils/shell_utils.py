@@ -96,8 +96,11 @@ def shell(command: str,
 
     if capture:
         # decode stderr and stdout
-        process.stdout = process.stdout.decode()
-        process.stderr = process.stderr.decode()
+        # keep bytes as raw_{stream}
+        process.raw_stdout: bytes = process.stdout
+        process.raw_stderr: bytes = process.stderr
+        process.stdout: str = process.stdout.decode()
+        process.stderr: str = process.stderr.decode()
 
     return process
 
