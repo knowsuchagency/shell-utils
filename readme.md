@@ -45,10 +45,6 @@ def main():
                     fg='yellow')
         os.chdir(root)
 
-    if root != cwd:
-        click.secho(f'Navigating from {cwd} to {root}', fg='yellow')
-        os.chdir(root)
-
 
 if __name__ == '__main__':
     main()
@@ -105,7 +101,7 @@ from the project root.
 ## shell
 
 Executes the given command in a bash shell. It's just a thin wrapper around `subprocess.run` that adds a couple handy features,
-such as printing the command it's about to run to stdout before executing it.
+such as printing the command it's about to run before executing it.
 
 ```python
 from shell_utils import shell
@@ -116,7 +112,7 @@ print(p1)
 
 p2 = shell('echo goodbye, cruel world', capture=True)
 
-print('captured the string:', p2.stdout.decode())
+print('captured the string:', p2.stdout)
 ```
 
 **outputs**
