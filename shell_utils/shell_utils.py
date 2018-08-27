@@ -80,17 +80,14 @@ def shell(command: str,
         )
         print()
 
-    try:
-        process = sp.run(
-            command,
-            check=check,
-            shell=True,
-            stdout=sp.PIPE if capture else None,
-            stderr=sp.PIPE if capture else None,
-            **kwargs
-        )
-    except sp.CalledProcessError:
-        raise
+    process = sp.run(
+        command,
+        check=check,
+        shell=True,
+        stdout=sp.PIPE if capture else None,
+        stderr=sp.PIPE if capture else None,
+        **kwargs
+    )
 
     # override bool dunder method
 
