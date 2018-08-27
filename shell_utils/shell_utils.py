@@ -5,6 +5,7 @@ import copy
 import os
 import subprocess as sp
 import textwrap
+import types
 import typing as T
 from contextlib import contextmanager
 from getpass import getuser
@@ -15,12 +16,25 @@ import click
 Pathy = T.Union[os.PathLike, str]
 
 
+def _bool(self: sp.CompletedProcess) -> bool:
+    """
+    Return True if return code is zero else false.
+
+    Args:
+        self: sp.CompletedProcess
+
+    Returns: True or False
+
+    """
+    return self.returncode == 0
+
+
 def shell(command: str,
           check=True,
           capture=False,
           silent=False,
           dedent=True,
-          strip=False,
+          strip=True,
           **kwargs
           ) -> sp.CompletedProcess:
     """
@@ -39,7 +53,7 @@ def shell(command: str,
                  piped to FD 1 and 2 by default
         silent: disable the printing of the command that's being run prior to execution
         dedent: de-dent command string; useful if it's a bash script written within a function in your module
-        strip: strip the command string of newlines and whitespace from the beginning and end
+        strip: strip ends of command string of newlines and whitespace prior to execution
         kwargs: passed to subprocess.run as-is
 
     Returns: Completed Process
@@ -48,27 +62,45 @@ def shell(command: str,
     user = click.style(getuser(), fg='green')
     hostname = click.style(gethostname(), fg='blue')
 
-    command = command.strip() if strip else command
     command = textwrap.dedent(command) if dedent else command
-
-    print()
+    command = command.strip() if strip else command
 
     if not silent:
-        print(f'{user}@{hostname} executing...', end=os.linesep * 2)
-        print(command, end=os.linesep + '--' + os.linesep)
+        print(f'{user}@{hostname}',
+              click.style('executing...', fg='yellow')
+              )
+        print(command)
+        print(
+            click.style(
+                ('-' * max(len(l) for l in command.splitlines())
+                 if command
+                 else ''),
+                fg='magenta'
+            )
+        )
+        print()
 
     try:
-        process = sp.run(command,
-                         check=check,
-                         shell=True,
-                         stdout=sp.PIPE if capture else None,
-                         stderr=sp.PIPE if capture else None,
-                         **kwargs
-                         )
+        process = sp.run(
+            command,
+            check=check,
+            shell=True,
+            stdout=sp.PIPE if capture else None,
+            stderr=sp.PIPE if capture else None,
+            **kwargs
+        )
     except sp.CalledProcessError:
         raise
 
-    print()
+    # override bool dunder method
+
+    process._bool = types.MethodType(_bool, process)
+    process.__class__.__bool__ = process._bool
+
+    if capture:
+        # decode stderr and stdout
+        process.stdout = process.stdout.decode()
+        process.stderr = process.stderr.decode()
 
     return process
 
