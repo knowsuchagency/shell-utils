@@ -37,18 +37,20 @@ def _(func):
 
     @wraps(func)
     def inner(*args, **kwargs):
-        result = None
-        message = 'Succeeded!'
-
+        message = 'Success!'
+        result = ''
         try:
-            result = func(*args, **kwargs)
-        except Exception:
-            message = 'Failed'
+            _result = func(*args, **kwargs)
+            if isinstance(_result, str):
+                result = _result
+        except:
+            message = 'Failure'
             raise
-        else:
-            return result
         finally:
-            notify(message, title=getattr(func, '__name__'))
+            notify(result,
+                   title=getattr(func, '__name__') + ' finished',
+                   subtitle=message
+                   )
 
     return inner
 
