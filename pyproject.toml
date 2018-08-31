@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "shell_utils"
-version = "0.9.9"
+version = "1.0.beta"
 readme = 'readme.md'
 repository = 'https://github.com/knowsuchagency/shell-utils'
 description = "Shell automation tools, like Make on steroids."

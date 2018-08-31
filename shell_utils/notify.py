@@ -23,6 +23,11 @@ def notify(message: str, title=None, subtitle=None, sound=None):
     if sys.platform != 'darwin':
         logging.warning('This function is designed to work on Mac OS')
 
+    # There is probably a less hacky way to escape single quotes safely
+    # but I haven't gotten to it
+
+    message = message.replace("'", '')
+
     command = f"""osascript -e 'display notification "{message}" with title "{title}" subtitle "{subtitle}" sound name "{sound}"' """
     sp.run(shlex.split(command), check=False)
 
