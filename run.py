@@ -31,6 +31,16 @@ def main():
 
 
 @main.command()
+@click.option('--username', '-u', envvar='PYPI_USERNAME')
+@click.option('--password', '-p', envvar='PYPI_PASSWORD')
+def publish(username, password):
+    """
+    Build and publish latest version to pypi.
+    """
+    shell(f'poetry publish --build --username {username} --password {password}')
+
+
+@main.command()
 @click.option('--auto-commit', is_flag=True, help='auto-commit if files changed')
 def autopep8(auto_commit):
     """Autopep8 modules."""

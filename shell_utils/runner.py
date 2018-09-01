@@ -2,7 +2,7 @@
 import os
 from pathlib import Path
 
-from shell_utils import shell, cd, env, path, quiet
+from shell_utils import shell, cd, env, path, quiet, notify, notice
 
 import click
 
