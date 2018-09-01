@@ -1,17 +1,22 @@
 import subprocess as sp
+import typing as typ
 import logging
-import types
 import shlex
 import sys
-from functools import singledispatch, wraps
+from functools import wraps
 
 import click
 
 
-@singledispatch
 def notify(message: str, title=None, subtitle=None, sound=None):
     """
-    Wraps osascript.
+    Send a Mac OS notification.
+
+    Args:
+        message: the notification body
+        title: the title of the notification
+        subtitle: the subtitle of the notification
+        sound: the sound the notification makes
 
     see https://apple.stackexchange.com/questions/57412/how-can-i-trigger-a-notification-center-notification-from-an-applescript-or-shel/115373#115373
     """
@@ -32,32 +37,53 @@ def notify(message: str, title=None, subtitle=None, sound=None):
     sp.run(shlex.split(command), check=False)
 
 
-@notify.register(types.FunctionType)
-def _(func):
+def notice(message: typ.Optional[str] = None, title=None, subtitle=None, sound=None):
     """
-    Send notification that task has finished.
+    Returns a decorator that allows you to be notified when a function returns.
 
-    Especially useful for long-running tasks
+    Args:
+        message: the notification body
+        title: the title of the notification
+        subtitle: the subtitle of the notification
+        sound: the sound the notification makes
+
+    Returns: a function
     """
 
-    @wraps(func)
-    def inner(*args, **kwargs):
-        message = 'Success!'
-        result = ''
-        try:
-            _result = func(*args, **kwargs)
-            if isinstance(_result, str):
-                result = _result
-        except:
-            message = 'Failure'
-            raise
-        finally:
-            notify(result,
-                   title=getattr(func, '__name__') + ' finished',
-                   subtitle=message
-                   )
+    def decorator(func):
+        """
+        Send notification that task has finished.
 
-    return inner
+        Especially useful for long-running tasks
+        """
+
+        @wraps(func)
+        def inner(*args, **kwargs):
+            nonlocal message, title, subtitle, sound
+
+            title = getattr(func, '__name__') + ' finished' if title is None else title
+            subtitle = 'Success!' if subtitle is None else subtitle
+            result = None
+
+            try:
+                _result = func(*args, **kwargs)
+                if isinstance(_result, str):
+                    result = _result
+            except:
+                subtitle = 'Failure'
+                raise
+            finally:
+                if message is not None:
+                    pass
+                elif result is not None:
+                    message = result
+                else:
+                    message = ''
+                notify(message, title=title, subtitle=subtitle, sound=sound)
+
+        return inner
+
+    return decorator
 
 
 @click.command()
