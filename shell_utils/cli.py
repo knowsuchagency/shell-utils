@@ -6,6 +6,9 @@ Usage:  [OPTIONS] COMMAND [ARGS]...
 Options:
   --help  Show this message and exit.
 """
+import sys
+import subprocess as sp
+
 from pathlib import Path
 
 from shell_utils import shell
@@ -34,6 +37,18 @@ def generate_runner():
     runner_path.write_text(Path(runner.__file__).read_text())
 
     shell('chmod +x run.py')
+
+
+def invoke_runner():
+    """
+    This invokes the run.py script in the current directory.
+    """
+    if not Path(Path(), 'run.py').exists():
+        raise SystemExit(
+            click.secho('run.py not found in current directory', fg='red')
+        )
+
+    sp.run(['python', 'run.py'] + sys.argv[1:])
 
 
 if __name__ == "__main__":
