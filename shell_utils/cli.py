@@ -48,7 +48,7 @@ def invoke_runner():
             click.secho('run.py not found in current directory', fg='red')
         )
 
-    sp.run(['python', 'run.py'] + sys.argv[1:])
+    sp.run(['python3', 'run.py'] + sys.argv[1:])
 
 
 if __name__ == "__main__":
