@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """Tests for `shell_utils` package."""
-from shell_utils.shell_utils import shell, env, path, quiet
+from shell_utils.shell_utils import shell, env, path, cd
 
 import pytest
 
@@ -15,20 +15,24 @@ def test_shell_capture():
     echo_string = shell(f'echo {string}', capture=True)
 
     assert echo_string.returncode == 0
-    assert echo_string.stdout.decode().strip() == string
+    assert echo_string.raw_stdout.decode().strip() == string
+    assert echo_string.stdout.strip() == string
 
     to_stderr = shell(f'echo "{string}" >&2', capture=True)
 
     assert to_stderr.returncode == 0
-    assert to_stderr.stderr.decode().strip() == string
+    assert to_stderr.raw_stderr.decode().strip() == string
+    assert to_stderr.stderr.strip() == string
 
 
 def test_shell_raises():
     """Test shell raises."""
-    with pytest.raises(SystemExit):
+    import subprocess as sp
+
+    with pytest.raises(sp.CalledProcessError):
         shell('exit 1')
 
-    assert shell('exit 1', check=False).returncode == 1
+    assert not shell('exit 1', check=False)
 
 
 def test_env():
@@ -61,3 +65,13 @@ def test_path():
         assert Path(os.environ['PATH']) != original_path
 
     assert Path(os.environ['PATH']) == original_path
+
+
+def test_cd():
+    from pathlib import Path
+
+    root = Path().parent.resolve()
+    original_cwd = Path().resolve()
+    with cd(root):
+        assert Path().resolve() == root
+    assert Path().resolve() == original_cwd

@@ -61,8 +61,13 @@ def notice(message: typ.Optional[str] = None, title=None, subtitle=None, sound=N
         def inner(*args, **kwargs):
             nonlocal message, title, subtitle, sound
 
-            title = getattr(func, '__name__') + ' finished' if title is None else title
-            subtitle = 'Success!' if subtitle is None else subtitle
+            title = getattr(func, '__name__') + \
+                ' finished' if title is None else title
+
+            _subtitle = None
+
+            _sound = None
+
             result = None
 
             try:
@@ -70,15 +75,26 @@ def notice(message: typ.Optional[str] = None, title=None, subtitle=None, sound=N
                 if isinstance(_result, str):
                     result = _result
             except:
-                subtitle = 'Failure'
+                _subtitle = 'Failure'
+                _sound = 'Basso'
                 raise
             finally:
                 if message is not None:
-                    pass
+                    message = message
                 elif result is not None:
                     message = result
                 else:
                     message = ''
+
+                if subtitle is not None:
+                    subtitle = subtitle
+                elif _subtitle is not None:
+                    subtitle = _subtitle
+                else:
+                    subtitle = 'Success!'
+
+                sound = sound or _sound
+
                 notify(message, title=title, subtitle=subtitle, sound=sound)
 
         return inner

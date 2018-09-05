@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "shell_utils"
-version = "2.2.1"
+version = "2.3"
 readme = 'readme.md'
 repository = 'https://github.com/knowsuchagency/shell-utils'
 description = "Shell automation tools, like Make on steroids."
@@ -15,6 +15,7 @@ run = 'shell_utils.cli:invoke_runner'
 [tool.poetry.dependencies]
 python = "*"
 click = "^6.7"
+autopep8 = "^1.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.6"

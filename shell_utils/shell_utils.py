@@ -119,8 +119,7 @@ def env(**kwargs) -> T.Iterator[os._Environ]:
     """Set environment variables and yield new environment dict."""
     original_environment = copy.deepcopy(os.environ)
 
-    for key, value in kwargs.items():
-        os.environ[key] = value
+    os.environ.update(kwargs)
 
     yield os.environ
 
@@ -129,7 +128,7 @@ def env(**kwargs) -> T.Iterator[os._Environ]:
 
 @contextmanager
 def path(*paths: Pathy, prepend=False, expand_user=True) -> T.Iterator[
-    T.List[str]]:
+        T.List[str]]:
     """
     Add the paths to $PATH and yield the new $PATH as a list.
 
@@ -143,7 +142,6 @@ def path(*paths: Pathy, prepend=False, expand_user=True) -> T.Iterator[
 
     for index, _path in enumerate(paths_list):
         if not isinstance(_path, str):
-            print(f'index: {index}')
             paths_str_list.append(_path.__fspath__())
         elif expand_user:
             paths_str_list.append(os.path.expanduser(_path))
@@ -151,7 +149,7 @@ def path(*paths: Pathy, prepend=False, expand_user=True) -> T.Iterator[
     original_path = os.environ['PATH'].split(':')
 
     paths_str_list = paths_str_list + \
-                     original_path if prepend else original_path + paths_str_list
+        original_path if prepend else original_path + paths_str_list
 
     with env(PATH=':'.join(paths_str_list)):
         yield paths_str_list
@@ -166,28 +164,24 @@ def quiet():
     """
 
     # open null file descriptors
-    null_file_descriptors = (
-        os.open(os.devnull, os.O_RDWR),
-        os.open(os.devnull, os.O_RDWR)
-    )
+    null_fd1, null_fd2 = os.open(
+        os.devnull, os.O_RDWR), os.open(os.devnull, os.O_RDWR)
 
     # save stdout and stderr
-    stdout_and_stderr = (os.dup(1), os.dup(2))
+    stdout, stderr = os.dup(1), os.dup(2)
 
     # assign the null pointers to stdout and stderr
-    null_fd1, null_fd2 = null_file_descriptors
     os.dup2(null_fd1, 1)
     os.dup2(null_fd2, 2)
 
     yield
 
     # re-assign the real stdout/stderr back to (1) and (2)
-    stdout, stderr = stdout_and_stderr
     os.dup2(stdout, 1)
     os.dup2(stderr, 2)
 
     # close all file descriptors.
-    for fd in null_file_descriptors + stdout_and_stderr:
+    for fd in (null_fd1, null_fd2, stdout, stderr):
         os.close(fd)
 
 
