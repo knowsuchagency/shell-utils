@@ -6,6 +6,8 @@ from shell_utils import shell, cd, env, path, quiet, notify, notice
 
 import click
 
+PROJECT_ROOT = Path(__file__).parent.resolve()
+
 
 @click.group()
 def main():
@@ -15,10 +17,9 @@ def main():
 
     # ensure we're running commands from project root
 
-    root = Path(__file__).parent.absolute()
-    cwd = Path().absolute()
+    cwd = Path().resolve()
 
-    if root != cwd:
+    if cwd != root:
         click.secho(f'Navigating from {cwd} to {root}',
                     fg='yellow')
         os.chdir(root)
